@@ -15,7 +15,7 @@ from setuptools import setup
 
 setup(
     name='ssp-sdk-python',
-    version='1',
+    version='0.1',
     description='A Python client for communicating with Neustars Security Services Platform',
     url='https://github.com/ultradns/ssp-sdk-python',
     author='Shane Barbetta',
