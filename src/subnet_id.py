@@ -12,27 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
-from .network_id import NetworkId
-from .sponsor import Sponsor
 
-class Networks:
-	def __init__(self, connection, base_uri):
+class SubnetId:
+	def __init__(self, connection, base_uri, subnet_id):
 		self.connection = connection
-		self.base_uri = base_uri+"/networks"
+		self.base_uri = base_uri+"/"+subnet_id
 
 	def get(self):
-		"""Get a list of Networks."""
+		"""Fetch a specific Subnet by it's ID."""
 		return self.connection.get(self.base_uri)
 
-	def post(self, cidr1, cidr2, name):
-		"""Create a new Network."""
-		properties = {"cidr1": cidr1, "cidr2": cidr2, "name": name}
-		return self.connection.post(self.base_uri, json.dumps(properties))
+	def put(self, subnet_id, sponsor_id, vip_id, policy_id, name, cidr, is_suspended=False, **kwargs):
+		"""Update a specific Subnet."""
+		properties = {"id": subnet_id, "sponsorId": sponsor_id, "accountId": account_id, "vipId": vip_id, "policyId": policy_id, "cidr": cidr, "isSuspended": is_suspended, "name": name}
+		if kwargs is not None:
+			properties.update(kwargs)
+		return self.connection.put(self.base_uri, json.dumps(properties))
 
-	def network_id(self, network_id):
-		"""Create a Network Id object."""
-		return NetworkId(self.connection, self.base_uri, network_id)
-
-	def sponsor(self):
-		"""Create a Sponsor object."""
-		return Sponsor(self.connection, self.base_uri)
+	def delete(self):
+		"""Delete a specific Subnet."""
+		return self.connection.delete(self.base_uri)

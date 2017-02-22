@@ -12,27 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
-from .network_id import NetworkId
+from .network import Network
 from .sponsor import Sponsor
+from .vip_id import VipId
 
-class Networks:
+class Vips:
 	def __init__(self, connection, base_uri):
 		self.connection = connection
-		self.base_uri = base_uri+"/networks"
+		self.base_uri = base_uri+"/vips"
 
 	def get(self):
-		"""Get a list of Networks."""
+		"""Get a list of VIPs."""
 		return self.connection.get(self.base_uri)
 
-	def post(self, cidr1, cidr2, name):
-		"""Create a new Network."""
-		properties = {"cidr1": cidr1, "cidr2": cidr2, "name": name}
-		return self.connection.post(self.base_uri, json.dumps(properties))
+	def post(self, network_id, ip_index, name, policy_override_enabled=False):
+		"""Create a new VIP.
 
-	def network_id(self, network_id):
-		"""Create a Network Id object."""
-		return NetworkId(self.connection, self.base_uri, network_id)
+		Arguments:
+		network_id -- The VIP network ID
+		ip_index --
+		name -- The name of the VIP
+		policy_override_enabled -- A boolean determining whether policy override is enabled
+
+		"""
+		properties = {"networkId": network_id, "ipIndex": ip_index, "name": name, "policyOverrideEnabled": policy_override_enabled}
+		return self.connection.post(self.base_uri, json.dumps(properties))
 
 	def sponsor(self):
 		"""Create a Sponsor object."""
 		return Sponsor(self.connection, self.base_uri)
+
+	def sponsor(self, vip_id):
+		"""Create a VIP ID object."""
+		return Sponsor(self.connection, self.base_uri, vip_id)

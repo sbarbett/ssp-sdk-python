@@ -12,27 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
-from .network_id import NetworkId
+from .blacklist_id import BlacklistId
 from .sponsor import Sponsor
+from .account import Account
 
-class Networks:
+class Blacklists:
 	def __init__(self, connection, base_uri):
 		self.connection = connection
-		self.base_uri = base_uri+"/networks"
+		self.base_uri = base_uri+"/blacklists"
 
 	def get(self):
-		"""Get a list of Networks."""
+		"""Get a list of blacklists."""
 		return self.connection.get(self.base_uri)
 
-	def post(self, cidr1, cidr2, name):
-		"""Create a new Network."""
-		properties = {"cidr1": cidr1, "cidr2": cidr2, "name": name}
+	def post(self, sponsor_id, account_id, name, **kwargs):
+		"""Create a new Blacklist."""
+		properties = {"sponsorId": sponsor_id, "accountId": account_id, "name": name}
+		if kwargs is not None:
+			properties.update(kwargs)
 		return self.connection.post(self.base_uri, json.dumps(properties))
 
-	def network_id(self, network_id):
-		"""Create a Network Id object."""
-		return NetworkId(self.connection, self.base_uri, network_id)
+	def blacklist_id(self, blacklist_id):
+		"""Create a Blacklist Id object."""
+		return BlacklistId(self.connection, self.base_uri, blacklist_id)
 
 	def sponsor(self):
 		"""Create a Sponsor object."""
 		return Sponsor(self.connection, self.base_uri)
+
+	def account(self):
+		"""Create an Account object."""
+		return Account(self.connection, self.base_uri)
