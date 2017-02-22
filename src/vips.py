@@ -41,7 +41,3 @@ class Vips:
 	def sponsor(self):
 		"""Create a Sponsor object."""
 		return Sponsor(self.connection, self.base_uri)
-
-	def sponsor(self, vip_id):
-		"""Create a VIP ID object."""
-		return Sponsor(self.connection, self.base_uri, vip_id)

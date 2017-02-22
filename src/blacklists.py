@@ -26,7 +26,17 @@ class Blacklists:
 		return self.connection.get(self.base_uri)
 
 	def post(self, sponsor_id, account_id, name, **kwargs):
-		"""Create a new Blacklist."""
+		"""Create a new Blacklist.
+
+		Arguments:
+		sponsor_id -- The sponsor ID associated with the blacklist.
+		account_id -- The account ID associated with the blacklist.
+		name -- The name of the blacklist.
+
+		Keyword Arguments:
+		description -- A description of the blacklist.
+
+		"""
 		properties = {"sponsorId": sponsor_id, "accountId": account_id, "name": name}
 		if kwargs is not None:
 			properties.update(kwargs)
