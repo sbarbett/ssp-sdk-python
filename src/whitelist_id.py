@@ -12,26 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
+from .records import Records
 
-class Items:
-	def __init__(self, connection, base_uri):
+class WhitelistId:
+	def __init__(self, connection, base_uri, whitelist_id):
 		self.connection = connection
-		self.base_uri = base_uri+"/items"
+		self.base_uri = base_uri+"/"+whitelist_id
 
 	def get(self):
-		"""Find items belonging to a specific Blacklist or Whitelist."""
+		"""Find a specific whitelist."""
 		return self.connection.get(self.base_uri)
 
-	def post(self, records):
-		"""Add item(s) to a specific Blacklist.
-
-		Argument:
-		records -- A list of hosts to block.
-
-		"""
-		properties = {"records": records}
-		return self.connection.post(self.base_uri, json.dumps(properties))
+	def put(self, sponsor_id, account_id, name, description, **kwargs):
+		"""Update a specific Whitelist."""
+		properties = {"sponsorId": sponsor_id, "accountId": account_id, "name": name, "description": description}
+		if kwargs is not None:
+			properties.update(kwargs)
+		return self.connection.put(self.base_uri, json.dumps(properties))
 
 	def delete(self):
-		"""Delete item(s) from a specific Whitelist."""
+		"""Delete a specific Whitelist."""
 		return self.connection.delete(self.base_uri)
+
+	def records(self):
+		"""Create an Records object."""
+		return Records(self.connection, self.base_uri)

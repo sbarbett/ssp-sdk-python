@@ -12,29 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import json
-from .blacklist_id import BlacklistId
+from .whitelist_id import WhitelistId
 from .sponsor import Sponsor
 from .account import Account
 
-class Blacklists:
+class Whitelists:
 	def __init__(self, connection, base_uri):
 		self.connection = connection
-		self.base_uri = base_uri+"/blacklists"
+		self.base_uri = base_uri+"/whitelists"
 
 	def get(self):
-		"""Get a list of blacklists."""
+		"""Get a list of whitelists."""
 		return self.connection.get(self.base_uri)
 
 	def post(self, account_id, name, **kwargs):
-		"""Create a new Blacklist.
+		"""Create a new Whitelist.
 
 		Arguments:
-		account_id -- The account ID associated with the blacklist.
-		name -- The name of the blacklist.
+		account_id -- The account ID associated with the whitelist.
+		name -- The name of the whitelist.
 
 		Keyword Arguments:
-		sponsorId -- The sponsor ID associated with the blacklist (only required for NeustarAdmins)
-		description -- A description of the blacklist.
+		sponsorId -- The sponsor ID associated with the whitelist (only required for NeustarAdmins)
+		description -- A description of the whitelist.
 
 		"""
 		properties = {"accountId": account_id, "name": name}
@@ -42,9 +42,9 @@ class Blacklists:
 			properties.update(kwargs)
 		return self.connection.post(self.base_uri, json.dumps(properties))
 
-	def blacklist_id(self, blacklist_id):
-		"""Create a Blacklist Id object."""
-		return BlacklistId(self.connection, self.base_uri, blacklist_id)
+	def whitelist_id(self, whitelist_id):
+		"""Create a Whitelist Id object."""
+		return BlacklistId(self.connection, self.base_uri, whitelist_id)
 
 	def sponsor(self):
 		"""Create a Sponsor object."""

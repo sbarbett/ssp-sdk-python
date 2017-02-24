@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import requests
+import requests, json
 
 class AuthError(Exception):
     def __init__(self, message):
@@ -90,20 +90,28 @@ class Connection:
         return self._do_call(uri, "DELETE")
 
     def _do_call(self, uri, method, params=None, body=None, retry=True, files=None, content_type="application/json"):
-        # print self.host+uri
+        #print self.host+uri
         r1 = requests.request(method, "https://"+self.host+uri, params=params, data=body, headers=self._build_headers(content_type), files=files)
         if r1.status_code == requests.codes.NO_CONTENT or r1.status_code == requests.codes.CREATED:
-            return {}
-        # print r1.text
-        # print r1.headers
-        json_body = r1.json()
+            json_body = {'status': r1.status_code}
+        else:
+            json_body = r1.json()
+        rh = json.dumps(r1.headers.__dict__['_store'])
+        json_headers = json.loads(rh)
+        #print r1.status_code
+        #print json_body
         try:
             if json_body['error']:
-                if json_body['error']['code'] == "AUTHENTICATION_FAILED" and retry is True:
-                    self._refresh()
-                    json_body = self._do_call(uri, method, params, body, False)
-                else:
+                try:
+                    if json_body['error']['code']:
+                        if json_body['error']['code'] == "AUTHENTICATION_FAILED" and retry is True:
+                            self._refresh()
+                            json_body = self._do_call(uri, method, params, body, False)
+                        else:
+                            pass
+                except TypeError:
                     pass
         except KeyError:
             pass
-        return json_body
+        result = json.dumps({"body": json_body, "headers": json_headers})
+        return json.loads(result)
